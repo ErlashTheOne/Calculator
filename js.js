@@ -28,7 +28,7 @@ window.onload = function() {
     deleteOneDisplay(deleteOne, display);
     deleteAll(clearAll, display);
     changeToNegativeOrPositive(positiveNegative, display);
-    // add(plus, display, equal, buttons);
+    //add(plus, display, equal, buttons);
     // substract(minus, display, equal);
     // multiply(multiplication, display, equal);
     // division(divide, display, equal);
@@ -40,7 +40,6 @@ function toggleItem(elem) {
             this.classList.add('clicked');
             setTimeout(() => {  this.classList.remove('clicked'); }, 200);
         });
-        return true;
     }
 }
 
