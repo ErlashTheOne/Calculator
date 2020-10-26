@@ -23,6 +23,7 @@ window.onload = function() {
         document.querySelector(".Calculator__keyboard #num9"),
         document.querySelector(".Calculator__keyboard #point")
     ];
+    var invisibleDisplay = "";
 
     toggleItem(buttons);
     numbersOnDidplay(domArray, display);
@@ -30,10 +31,11 @@ window.onload = function() {
     deleteAll(clearAll, display);
     changeToNegativeOrPositive(positiveNegative, display);
     aplySquareRoot(squareRoot, display);
-    //add(plus, display, equal, buttons);
-    // substract(minus, display, equal);
-    // multiply(multiplication, display, equal);
-    // division(divide, display, equal);
+    add(plus, display);
+    subtract(minus, display);
+    multiply(multiplication, display);
+    division(divide, display);
+    resolveOperation(equal, display);
 };
 
 function toggleItem(elem) {
@@ -86,72 +88,64 @@ function changeToNegativeOrPositive(positiveNegative, display) {
 function aplySquareRoot(squareRoot, display){
     squareRoot.addEventListener("click", function() {
         if(!display.textContent.includes('-')){
-            display.innerHTML = Math.sqrt(parseInt(display.textContent));
+            let result = roundToFive(Math.sqrt(parseFloat(display.textContent)));
+            if((result.toString).length < 10){// arregla esto
+                display.innerHTML = result;
+            }else {
+                displayError("The num is too long", display);
+            }
         } else {
             displayError("Can't be negative", display);
         }
     }); 
 }
 
-// function add(plus, display, equal, buttons){
-//     plus.addEventListener("click", function() {
-//         let firstNum = parseInt(display.textContent);
-//         if(toggleItem(buttons)){
-//             display.innerHTML = "";
-//             toggleItem(buttons);
-//             equal.addEventListener("click", function() {
-//                 display.innerHTML = (firstNum + parseInt(display.textContent));
-//             });
-//         }
-//     });
-// }
+function add(elem, display){
+    elem.addEventListener("click", function() {
+        equation("+", display);
+    });
+}
 
-// function substract(minus, display, equal, buttons){
-//     minus.addEventListener("click", function() {
-//         let firstNum = parseInt(display.textContent);
-//         if(toggleItem(buttons)){
-//             display.innerHTML = "";
-//             toggleItem(buttons);
-//             equal.addEventListener("click", function() {
-//                 display.innerHTML = (firstNum - parseInt(display.textContent));
-//             });
-//         }
-//     });
-// }
+function subtract(elem, display){
+    elem.addEventListener("click", function() {
+        equation("-", display);
+    });
+}
 
-// function multiply(multiplication, display, equal, buttons){
-//     multiplication.addEventListener("click", function() {
-//         let firstNum = parseInt(display.textContent);
-//         if(toggleItem(buttons)){
-//             display.innerHTML = "";
-//             toggleItem(buttons);
-//             equal.addEventListener("click", function() {
-//                 display.innerHTML = (firstNum * parseInt(display.textContent));
-//             });
-//         }
-//     });
-// }
+function multiply(elem, display){
+    elem.addEventListener("click", function() {
+        equation("*", display);
+    });
+}
 
-// function division(divide, display, equal, buttons){
-//     divide.addEventListener("click", function() {
-//         let firstNum = parseInt(display.textContent);
-//         if(toggleItem(buttons)){
-//             display.innerHTML = "";
-//             toggleItem(buttons);
-//             equal.addEventListener("click", function() {
-//                 if(parseInt(display.textContent) != 0){
-//                     display.innerHTML = (firstNum / parseInt(display.textContent));
-//                 } else {
-//                     display.innerHTML = "Cant be divided by 0";
-//                     setTimeout(() => {  display.innerHTML = ""; }, 1000);
-//                 }
-//             });
-//         }
-//     });
-// }
+function division(elem, display){
+    elem.addEventListener("click", function() {
+        equation("/", display);
+    });
+}
+
+function equation(operationSign, display){
+    let firstNum = parseFloat(display.textContent);
+    display.innerHTML = "";
+    invisibleDisplay = firstNum + operationSign;
+}
+
+function resolveOperation(equal, display) {
+    equal.addEventListener("click", function() {
+        let secondNum = parseFloat(display.textContent);
+        invisibleDisplay += secondNum ;
+        let result = roundToFive(eval(invisibleDisplay));
+        if((result.toString).length < 10){// arregla esto
+            display.innerHTML = result;
+            secondNum = result;
+        }else {
+            displayError("The num is too long", display);
+        }
+
+    });
+}
 
 function displayError(errorMessage, display){
-    
     display.style.fontSize = '2rem';
     display.style.color = 'red';
     display.innerHTML = errorMessage;
@@ -160,4 +154,8 @@ function displayError(errorMessage, display){
         display.style.fontSize = '3.5rem';
         display.style.color = 'black';
     }, 1000);
+}
+
+function roundToFive(num) {    
+    return +(Math.round(num + "e+"+5)  + "e-"+5);
 }
