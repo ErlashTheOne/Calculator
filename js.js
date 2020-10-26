@@ -4,6 +4,7 @@ window.onload = function() {
     let deleteOne = document.querySelector(".Calculator__keyboard #delete");
     let clearAll = document.querySelector(".Calculator__keyboard #clearAll");
     let positiveNegative = document.querySelector(".Calculator__keyboard #positiveNegative");
+    let squareRoot = document.querySelector(".Calculator__keyboard #squareRoot");
     let plus = document.querySelector(".Calculator__keyboard #plus");
     let minus = document.querySelector(".Calculator__keyboard #minus");
     let multiplication = document.querySelector(".Calculator__keyboard #multiplication");
@@ -28,6 +29,7 @@ window.onload = function() {
     deleteOneDisplay(deleteOne, display);
     deleteAll(clearAll, display);
     changeToNegativeOrPositive(positiveNegative, display);
+    aplySquareRoot(squareRoot, display);
     //add(plus, display, equal, buttons);
     // substract(minus, display, equal);
     // multiply(multiplication, display, equal);
@@ -79,6 +81,16 @@ function changeToNegativeOrPositive(positiveNegative, display) {
             display.innerHTML = "-" + display.innerHTML;
         }
     });
+}
+
+function aplySquareRoot(squareRoot, display){
+    squareRoot.addEventListener("click", function() {
+        if(!display.textContent.includes('-')){
+            display.innerHTML = Math.sqrt(parseInt(display.textContent));
+        } else {
+            displayError("Can't be negative", display);
+        }
+    }); 
 }
 
 // function add(plus, display, equal, buttons){
@@ -137,3 +149,15 @@ function changeToNegativeOrPositive(positiveNegative, display) {
 //         }
 //     });
 // }
+
+function displayError(errorMessage, display){
+    
+    display.style.fontSize = '2rem';
+    display.style.color = 'red';
+    display.innerHTML = errorMessage;
+    setTimeout(() => {  
+        display.innerHTML = ""; 
+        display.style.fontSize = '3.5rem';
+        display.style.color = 'black';
+    }, 1000);
+}
